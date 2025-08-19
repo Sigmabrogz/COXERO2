@@ -8,6 +8,81 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- DRAMATIC LOADING SCREEN -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="logo-loading">
+                <img src="logo.png" alt="CodeZero" class="loading-logo">
+                <div class="loading-pulse"></div>
+            </div>
+            
+            <div class="loading-text">
+                <div class="system-message active">INITIALIZING BLOCKCHAIN PROTOCOL...</div>
+                <div class="system-message">CONNECTING TO SEI NETWORK...</div>
+                <div class="system-message">LOADING SMART CONTRACTS...</div>
+                <div class="system-message">VERIFYING SECURITY LAYERS...</div>
+                <div class="system-message">CODEZERO READY TO DEPLOY</div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                    <div class="progress-glitch"></div>
+                </div>
+                <div class="progress-percentage">0%</div>
+            </div>
+            
+            <div class="loading-particles"></div>
+        </div>
+    </div>
+
+    <!-- EXCLUSIVE EARLY ACCESS MODAL -->
+    <div id="waitlist-modal" class="waitlist-modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            
+            <div class="exclusive-badge">
+                <span class="badge-text">EXCLUSIVE</span>
+                <div class="badge-glow"></div>
+            </div>
+            
+            <h2 class="modal-title">Be Among The First 1000</h2>
+            <p class="modal-subtitle">Join the elite early access list for CodeZero</p>
+            
+            <div class="spots-counter">
+                <div class="counter-value">
+                    <span class="counter-number">847</span>
+                    <span class="counter-total">/ 1000</span>
+                </div>
+                <div class="counter-label">Spots Remaining</div>
+                <div class="counter-urgency">Only 153 left!</div>
+            </div>
+            
+            <div class="vip-benefits">
+                <h3>VIP Early Bird Benefits:</h3>
+                <ul class="benefits-list">
+                    <li>🚀 First access to all features</li>
+                    <li>💎 Exclusive NFT airdrop</li>
+                    <li>⚡ Zero gas fees for 30 days</li>
+                    <li>🎯 Priority customer support</li>
+                    <li>🏆 Founder badge & special role</li>
+                </ul>
+            </div>
+            
+            <form class="waitlist-form">
+                <div class="form-group">
+                    <input type="email" placeholder="Enter your email address" class="email-input" required>
+                    <button type="submit" class="join-waitlist-btn">
+                        <span class="btn-text">SECURE MY SPOT</span>
+                        <div class="btn-glow"></div>
+                    </button>
+                </div>
+                <p class="form-note">We'll never spam you. One-click unsubscribe.</p>
+            </form>
+        </div>
+    </div>
+
     <div class="container">
         <!-- Header -->
         <header class="header">
@@ -20,7 +95,7 @@
             </div>
             <nav class="nav">
                 <button class="connect-wallet-btn">Connect Wallet</button>
-                <button class="get-started-btn">Get started</button>
+                <button class="get-started-btn" onclick="openWaitlistModal()">Get Early Access</button>
             </nav>
         </header>
 
@@ -115,5 +190,161 @@
 
 
     </div>
+
+    <script>
+        // DRAMATIC LOADING SCREEN FUNCTIONALITY
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            const progressFill = document.querySelector('.progress-fill');
+            const progressPercentage = document.querySelector('.progress-percentage');
+            const systemMessages = document.querySelectorAll('.system-message');
+            let currentProgress = 0;
+            let currentMessage = 0;
+
+            // Loading animation sequence
+            const loadingInterval = setInterval(() => {
+                currentProgress += Math.random() * 15 + 5;
+                
+                if (currentProgress > 100) {
+                    currentProgress = 100;
+                }
+                
+                progressFill.style.width = currentProgress + '%';
+                progressPercentage.textContent = Math.floor(currentProgress) + '%';
+                
+                // Switch messages
+                if (currentProgress > (currentMessage + 1) * 20 && currentMessage < systemMessages.length - 1) {
+                    systemMessages[currentMessage].classList.remove('active');
+                    currentMessage++;
+                    systemMessages[currentMessage].classList.add('active');
+                }
+                
+                // Glitch effect at random intervals
+                if (Math.random() < 0.1) {
+                    document.querySelector('.progress-glitch').style.opacity = '1';
+                    setTimeout(() => {
+                        document.querySelector('.progress-glitch').style.opacity = '0';
+                    }, 100);
+                }
+                
+                if (currentProgress >= 100) {
+                    clearInterval(loadingInterval);
+                    setTimeout(() => {
+                        loadingOverlay.style.opacity = '0';
+                        setTimeout(() => {
+                            loadingOverlay.style.display = 'none';
+                        }, 500);
+                    }, 1000);
+                }
+            }, 200);
+
+            // Particle animation
+            createParticles();
+        });
+
+        // Create floating particles
+        function createParticles() {
+            const particleContainer = document.querySelector('.loading-particles');
+            const particleCount = 20;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 4 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                particleContainer.appendChild(particle);
+            }
+        }
+
+        // WAITLIST MODAL FUNCTIONALITY
+        function openWaitlistModal() {
+            document.getElementById('waitlist-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            animateCounter();
+        }
+
+        function closeWaitlistModal() {
+            document.getElementById('waitlist-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking backdrop or X button
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal-backdrop') || e.target.classList.contains('modal-close')) {
+                closeWaitlistModal();
+            }
+        });
+
+        // Animate the counter
+        function animateCounter() {
+            const counterNumber = document.querySelector('.counter-number');
+            const startValue = 950;
+            const endValue = 847;
+            const duration = 2000;
+            const startTime = Date.now();
+            
+            const updateCounter = () => {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const currentValue = Math.floor(startValue - (startValue - endValue) * progress);
+                
+                counterNumber.textContent = currentValue;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    // Add urgency effect
+                    setTimeout(() => {
+                        document.querySelector('.counter-urgency').style.animation = 'urgencyPulse 2s infinite';
+                    }, 500);
+                }
+            };
+            
+            updateCounter();
+        }
+
+        // Form submission
+        document.querySelector('.waitlist-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.querySelector('.join-waitlist-btn');
+            const btnText = document.querySelector('.btn-text');
+            
+            btnText.textContent = 'SECURING...';
+            btn.style.transform = 'scale(0.98)';
+            
+            setTimeout(() => {
+                btnText.textContent = 'SPOT SECURED! ✓';
+                btn.style.background = 'linear-gradient(45deg, #4CAF50, #45a049)';
+                
+                setTimeout(() => {
+                    closeWaitlistModal();
+                    // Reset form
+                    setTimeout(() => {
+                        btnText.textContent = 'SECURE MY SPOT';
+                        btn.style.background = '';
+                        btn.style.transform = '';
+                        document.querySelector('.email-input').value = '';
+                    }, 1000);
+                }, 2000);
+            }, 1500);
+        });
+
+        // Add glitch effect to random elements
+        setInterval(() => {
+            const glitchElements = document.querySelectorAll('.wave-letter, .glass-tag');
+            const randomElement = glitchElements[Math.floor(Math.random() * glitchElements.length)];
+            
+            if (randomElement && Math.random() < 0.05) {
+                randomElement.style.filter = 'blur(1px) brightness(1.5)';
+                randomElement.style.transform += ' skew(2deg)';
+                
+                setTimeout(() => {
+                    randomElement.style.filter = '';
+                    randomElement.style.transform = randomElement.style.transform.replace(' skew(2deg)', '');
+                }, 50);
+            }
+        }, 2000);
+    </script>
 </body>
 </html>
